@@ -1,6 +1,11 @@
 ################################################################################
 ## Common
 
+variable "account_id" {
+  type = "string"
+  default = "772663561820"
+}
+
 # Repeated in backend config
 variable "state_bucket" {
   type = "string"
@@ -45,15 +50,41 @@ resource "aws_iam_policy" "hhttpserver_infrastructure" {
   policy = "${data.aws_iam_policy_document.hhttpserver_infrastructure.json}"
 }
 
+resource "aws_dynamodb_table" "hhttpserver_infrastructure" {
+  name = "hhttpserver_infrastructure"
+  hash_key = "LockID"
+  read_capacity = 1
+  write_capacity = 1
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+
 data "aws_iam_policy_document" "hhttpserver_infrastructure" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:Put*",
-      "s3:Get*"
+      "*",
     ]
     resources = [
       "arn:aws:s3:::${var.state_bucket}/hhttpserver.tfstate"
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:BatchGetItem",
+      "dynamodb:Query",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:BatchWriteItem"
+    ]
+    resources = [
+      "arn:aws:dynamodb:eu-west-1:${var.account_id}:table/hhttpserver_infrastructure"
     ]
   }
 }
