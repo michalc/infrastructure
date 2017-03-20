@@ -7,7 +7,7 @@ The purpose of this repository is to create the users/s3 buckets/dynamodb tables
 
 - The only infrastucture this repository should make for other projects is the Terraform user, dynamodb table, and associated permissions for Terraform to make other infrastructure.
 
-The aim is to make other projects as standalone as possible: theorically deployable to another account, at least with minimum of changes.
+The aim is to make other projects as standalone as possible: theorically deployable to another account, at least with minimum of changes. It also allows restricting/experimenting with the permissions of other users fairly straightforwardly, with changes recorded and can be undone if necessary.
 
 
 Usage
@@ -25,6 +25,7 @@ To preview changes:
 To then apply them:
 
     terraform apply plan
+
 
 Credentials
 -----------
